@@ -1,0 +1,6 @@
+<h2>Post :</h2>
+<p>Titre : {{post.title}}</p>
+<p>Contenu : {{post.content}}</p>
+<p>Date de création : {{post.createdAt | date:('YYYY/MM/dd HH:mm') }}</p>
+<p>Likes : {{post.loveIts}}</p>
+<button class="btn btn-secondary" routerLink="/posts">Retourner sur la liste des posts</button>
