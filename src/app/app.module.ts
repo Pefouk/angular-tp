@@ -8,13 +8,20 @@ import {AuthComponent} from './auth/auth.component';
 import {PostViewComponent} from './post-view/post-view.component';
 import {Routes, RouterModule} from '@angular/router';
 import {AuthService} from './services/auth.service';
-import { PostSoloComponent } from './post-solo/post-solo.component';
+import {PostSoloComponent} from './post-solo/post-solo.component';
+import {FourofourComponent} from './fourofour/fourofour.component';
+import {AuthGuardGuard} from './services/auth-guard.guard';
+import { EditPostComponentComponent } from './edit-post-component/edit-post-component.component';
+import {FormsModule} from '@angular/forms';
 
 const appRoutes: Routes = [
-  {path: 'posts', component: PostViewComponent},
-  {path: 'posts/:id', component: PostSoloComponent},
+  {path: 'posts', canActivate: [AuthGuardGuard], component: PostViewComponent},
+  {path: 'posts/:id', canActivate: [AuthGuardGuard], component: PostSoloComponent},
+  {path: 'edit', canActivate: [AuthGuardGuard], component: EditPostComponentComponent},
   {path: 'login', component: AuthComponent},
-  {path: '', component: PostViewComponent}
+  {path: '', canActivate: [AuthGuardGuard], component: PostViewComponent},
+  {path: 'not-found', component: FourofourComponent},
+  {path: '**', redirectTo: 'not-found'}
 ];
 
 @NgModule({
@@ -23,11 +30,14 @@ const appRoutes: Routes = [
     PostListComponentComponent,
     AuthComponent,
     PostViewComponent,
-    PostSoloComponent
+    PostSoloComponent,
+    FourofourComponent,
+    EditPostComponentComponent
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    FormsModule
   ],
   providers: [
     PostService,

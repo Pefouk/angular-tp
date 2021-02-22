@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Post} from '../objects/post';
+import {PostModel} from '../models/post.model';
 import {PostService} from '../services/post.service';
 import {ActivatedRoute} from '@angular/router';
 
@@ -10,13 +10,13 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class PostSoloComponent implements OnInit {
 
-  post: Post;
+  post: PostModel;
 
   constructor(private postService: PostService, private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    this.post = this.postService.posts[this.route.snapshot.params['id']];
+    this.post = this.postService.posts[this.route.snapshot.params.id];
   }
 
 }

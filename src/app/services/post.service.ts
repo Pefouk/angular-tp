@@ -1,37 +1,57 @@
-import {Post} from '../objects/post';
+import {PostModel} from '../models/post.model';
+import {Subject} from 'rxjs';
 
 export class PostService {
+  postSubject = new Subject<any[]>();
   posts = [
-    new Post(
+    new PostModel(
       1,
-      'Post numéro 1',
+      'PostModel numéro 1',
       'Lorem Ipsum',
       1,
       new Date()
     ),
-    new Post(
+    new PostModel(
       2,
-      'Post numéro 2',
+      'PostModel numéro 2',
       'Lorem Ipsum',
       0,
       new Date()
     ),
-    new Post(
+    new PostModel(
       3,
-      'Post numéro 3',
+      'PostModel numéro 3',
       'Lorem Ipsum',
       -1,
       new Date()
-    ), new Post(
+    ), new PostModel(
       4,
-      'Post numéro 4',
+      'PostModel numéro 4',
       'Lorem Ipsum',
       0,
       new Date()
     )
   ];
 
-  findById(id: number): Post {
+  createPost(titre: string, content: string, date: string): any {
+    const id = this.posts[this.posts.length - 1].id + 1;
+    const post = new PostModel(
+      id,
+      titre,
+      content,
+      0,
+      new Date(date)
+    );
+    this.posts.push(post);
+    this.emitPostSubject();
+    return 'success !';
+  }
+
+  emitPostSubject(): any {
+    this.postSubject.next(this.posts.slice());
+  }
+
+  findById(id: number): PostModel {
     return this.posts.find(
       (s) => {
         return s.id === id;
@@ -41,27 +61,32 @@ export class PostService {
 
   likeOne(i: number): any {
     this.posts[i].loveIts++;
+    this.emitPostSubject();
   }
 
   dislikeOne(i: number): any {
     this.posts[i].loveIts--;
+    this.emitPostSubject();
   }
 
   likeAll(): any {
     for (const post of this.posts) {
       post.loveIts++;
+      this.emitPostSubject();
     }
   }
 
   dislikeAll(): any {
     for (const post of this.posts) {
       post.loveIts--;
+      this.emitPostSubject();
     }
   }
 
   resetAll(): any {
     for (const post of this.posts) {
       post.loveIts = 0;
+      this.emitPostSubject();
     }
   }
 }

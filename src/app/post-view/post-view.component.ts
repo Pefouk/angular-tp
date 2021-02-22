@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {PostService} from '../services/post.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-post-view',
@@ -8,7 +9,16 @@ import {PostService} from '../services/post.service';
 })
 export class PostViewComponent implements OnInit {
   posts: any[];
-  isAuth: false;
+  postSubscription: Subscription;
+
+  lastUpdate = new Promise((resolve, reject) => {
+    const date = new Date();
+    setTimeout(
+      () => {
+        resolve(date);
+      }, 2000
+    );
+  });
 
   constructor(private postService: PostService) {
   }
@@ -26,6 +36,11 @@ export class PostViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.posts = this.postService.posts;
+    this.postSubscription = this.postService.postSubject.subscribe(
+      (posts: any[]) => {
+        this.posts = posts;
+      }
+    );
+    this.postService.emitPostSubject();
   }
 }
